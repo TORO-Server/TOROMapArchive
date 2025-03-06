@@ -1,0 +1,7 @@
+services:
+  toromapdrive:
+    image: ghcr.io/toro-server/toromapdrive:latest
+    environment:
+      - GAS_URL=${GAS_URL}
+    volumes:
+      - ./map:/app/map

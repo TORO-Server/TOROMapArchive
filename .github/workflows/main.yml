@@ -1,0 +1,21 @@
+name: MapArchive
+on:
+  schedule:
+    - cron: '0 20 * * *' # UTC時間で毎日午前20時 (日本時間 午前5時)
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Run Archive
+        run: |
+          GAS_URL=${{ secrets.GAS_URL }}
+          docker compose up
+          cd map
+          ls
+
+permissions:
+  contents: write
