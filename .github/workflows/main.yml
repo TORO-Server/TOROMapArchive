@@ -8,12 +8,9 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
       - name: Run Archive
         run: |
-          GAS_URL=${{ secrets.GAS_URL }}
-          docker compose up
+          docker compose -env GAS_URL=${{ secrets.GAS_URL }} up
           cd map
           ls
 
