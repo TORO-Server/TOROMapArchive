@@ -3,16 +3,39 @@ on:
   schedule:
     - cron: '0 20 * * *' # UTC時間で毎日午前20時 (日本時間 午前5時)
   workflow_dispatch:
-
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
       - name: Run Archive
         run: |
-          docker compose -env GAS_URL=${{ secrets.GAS_URL }} up
-          cd map
-          ls
-
+          docker run --env GAS_URL=${{ secrets.GAS_URL }} -v ./map:/app/map ghcr.io/toro-server/toromapdrive:latest
+      - name: Get Datetime
+        env:
+          TZ: 'Asia/Tokyo' # タイムゾーン指定
+        run: |
+          echo "CURRENT_DATETIME=$(date "+%Y-%m-%d")" >> $GITHUB_ENV
+      - name: Move Files
+        run: |
+          sudo mv "./map/main-flat-origin.png" "./main-flat.png"
+          sudo mv "./map/flat-flat-origin.png" "./flat-flat.png"
+      - name: Configure Git user
+        run: |
+          git config --local user.email ""
+          git config --local user.name "MapArchiver"
+      - name: Add and commit changes
+        run: |
+          git add .
+          git commit -m "${{ env.CURRENT_DATETIME }}"
+        continue-on-error: true # 変更がない場合はエラーになるので無視
+      - name: Push changes
+        run: |
+          git push origin main
+          git tag ${{ env.CURRENT_DATETIME }}
+          git push origin ${{ env.CURRENT_DATETIME }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 permissions:
   contents: write
