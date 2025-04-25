@@ -1,0 +1,24 @@
+name: Release Archive
+on:
+  push:
+    tags:
+      - "*-*-*"
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Create ReleaseBody
+        run: |
+          echo "${{ github.ref_name }}" | tee -a .github/ReleaseBody.txt
+      - name: Release Map
+        uses: softprops/action-gh-release@v1
+        with:
+          body_path: .github/ReleaseBody.txt
+          files: |
+            ./main-flat.png
+            ./flat-flat.png
+permissions:
+  contents: write

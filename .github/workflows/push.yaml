@@ -1,4 +1,4 @@
-name: MapArchive
+name: Push Archive
 on:
   schedule:
     - cron: '0 20 * * *' # UTC時間で毎日午前20時 (日本時間 午前5時)
