@@ -47,8 +47,7 @@ jobs:
         uses: actions/checkout@v4
       - name: Get Datetime
         run: |
-          echo "DATETIME=$(date "+%Y-%m-%d")" >> $GITHUB_ENV
-          echo ${{ env.DATETIME }}
+          echo "DATETIME=${{ needs.build.outputs.datetime }}" >> $GITHUB_ENV
       - name: Create Body
         run: |
           printf "\n${{ env.DATETIME }}\n" >> .github/release_body.md
