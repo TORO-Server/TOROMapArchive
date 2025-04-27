@@ -50,7 +50,7 @@ jobs:
           echo "DATETIME=${{ needs.build.outputs.datetime }}" >> $GITHUB_ENV
       - name: Create Body
         run: |
-          printf "\n${{ env.DATETIME }}\n" >> .github/release_body.md
+          printf "\n## ${{ env.DATETIME }}\n" >> .github/release_body.md
       - name: Create Release
         uses: softprops/action-gh-release@v2
         with:
