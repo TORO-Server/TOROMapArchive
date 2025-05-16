@@ -28,7 +28,7 @@
                    AT END
                        SET End-Of-File TO TRUE
                    NOT AT END
-                       DISPLAY "## [" InputRecord "](" InputRecord ")"
+                       DISPLAY "## [" FUNCTION TRIM(InputRecord) "](" FUNCTION TRIM(InputRecord) ")"
                END-READ
            END-PERFORM
 
