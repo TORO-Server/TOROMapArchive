@@ -11,7 +11,7 @@ jobs:
         uses: actions/checkout@v4
       - name: Run Archive
         run: |
-          docker run -v ./map:/app/map ghcr.io/toro-server/toromapdownloader:latest
+          docker compose up
       - name: Get Datetime
         env:
           TZ: 'Asia/Tokyo' # タイムゾーン指定

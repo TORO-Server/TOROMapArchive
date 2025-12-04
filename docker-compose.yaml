@@ -1,5 +1,5 @@
 services:
   toromapdrive:
-    image: ghcr.io/toro-server/toromapdrive:latest
+    image: ghcr.io/toro-server/toro-map-downloader:latest
     volumes:
       - ./map:/app/map
