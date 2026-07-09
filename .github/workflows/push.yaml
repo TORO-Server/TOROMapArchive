@@ -65,8 +65,10 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      - name: Setup imagemagick
-        uses: mfinelli/setup-imagemagick@v6
+      - name: Install ImageMagick
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y imagemagick
       - name: Setup Cobol
         uses: fabasoad/setup-cobol-action@v1
       - name: Create Images
@@ -75,8 +77,8 @@ jobs:
           cd dist
           cp "../main-flat.png" "./main-flat.png"
           cp "../flat-flat.png" "./flat-flat.png"
-          magick "./main-flat.png" -resize 2048x2048 "./main-flat-2048.png"
-          magick "./flat-flat.png" -resize 2048x2048 "./flat-flat-2048.png"
+          convert "./main-flat.png" -resize 2048x2048 "./main-flat-2048.png"
+          convert "./flat-flat.png" -resize 2048x2048 "./flat-flat-2048.png"
       - name: Create README
         run: |
           cobc -x ./GEN-README.CBL
