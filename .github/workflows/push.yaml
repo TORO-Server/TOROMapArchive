@@ -59,12 +59,21 @@ jobs:
           files: |
             main-flat.png
             flat-flat.png
-  gh-pages:
+  pages:
     runs-on: ubuntu-latest
     needs: [build]
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          ref: main
       - name: Install ImageMagick
         run: |
           sudo apt-get update
@@ -79,19 +88,19 @@ jobs:
           cp "../flat-flat.png" "./flat-flat.png"
           convert "./main-flat.png" -resize 2048x2048 "./main-flat-2048.png"
           convert "./flat-flat.png" -resize 2048x2048 "./flat-flat-2048.png"
-      - name: Create README
+      - name: Create Site
         run: |
-          cobc -x ./GEN-README.CBL
+          cobc -x ./GEN-SITE.CBL
           cd dist
           ls | grep -E '\.(jpg|jpeg|png|gif)$' > FILE-LIST.DAT
-          ../GEN-README > README.md
+          ../GEN-SITE
           rm FILE-LIST.DAT
-      - name: Deploy to GitHub Pages
-        uses: JamesIves/github-pages-deploy-action@v4
+      - name: Upload Pages Artifact
+        uses: actions/upload-pages-artifact@v3
         with:
-          branch: gh-pages
-          folder: dist
-          git-config-name: github-actions[bot]
-          git-config-email: github-actions[bot]@users.noreply.github.com
+          path: dist
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
 permissions:
   contents: write
